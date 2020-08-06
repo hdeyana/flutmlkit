@@ -16,6 +16,7 @@ dependencies:
   google_fonts: ^1.1.0
   flutter_launcher_icons: ^0.7.5
   camera: ^0.5.8+2
+  auto_size_text: ^2.1.0
 
 dev_dependencies:
   flutter_test:

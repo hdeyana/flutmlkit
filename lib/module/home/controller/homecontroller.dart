@@ -4,4 +4,5 @@ import 'package:get/get.dart';
 
 class HomeController extends BaseController {
   void gotoFaceDetector() => Get.toNamed(AppRoute.facePage);
+  void gotoTextRecognizer() => Get.toNamed(AppRoute.textPage);
 }

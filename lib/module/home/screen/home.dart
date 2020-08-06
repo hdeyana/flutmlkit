@@ -21,6 +21,11 @@ class Home extends StatelessWidget {
                 img: 'https://images.unsplash.com/photo-1591404467888-f41d7efb5809?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
                 onTap: () => c.gotoFaceDetector(),
               ),
+              BannerButton(
+                title: 'OCR',
+                img: 'https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80',
+                onTap: () => c.gotoTextRecognizer(),
+              ),
             ],
           ),
         );

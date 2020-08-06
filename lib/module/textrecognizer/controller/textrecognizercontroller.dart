@@ -6,17 +6,14 @@ import 'package:flutmlkit/application/basecontroller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class FaceDetectorController extends BaseController {
+class TextRecognizerController extends BaseController {
   CameraController cameraController;
   List<CameraDescription> cameras = [];
-  final FaceDetector faceDetector = FirebaseVision.instance.faceDetector(
-    FaceDetectorOptions(enableClassification: true, mode: FaceDetectorMode.accurate, enableTracking: true),
-  );
+  final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
+
   bool _mounted = true;
   bool _isDetecting = false;
-  double smilingProbability = 0;
-  Rect faceRect;
-  int numberOfFaces = 0;
+  String resultText;
 
   @override
   void onInit() {
@@ -33,14 +30,14 @@ class FaceDetectorController extends BaseController {
   close() async {
     _mounted = false;
     await cameraController.dispose();
-    await faceDetector.close();
+    await textRecognizer.close();
   }
 
   init() async {
     try {
       cameras = await availableCameras();
-      final c = cameras[1] != null ? cameras[1] : cameras[0];
-      onNewCameraSelected(c);
+
+      onNewCameraSelected(cameras[0]);
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -74,14 +71,11 @@ class FaceDetectorController extends BaseController {
           _isDetecting = true;
 
           final image = FirebaseVisionImage.fromBytes(_concatenatePlanes(data.planes), _buildMetaData(data));
-          final List<Face> faces = await faceDetector.processImage(image);
+          final VisionText result = await textRecognizer.processImage(image);
           _isDetecting = false;
-          if (faces.isNotEmpty) {
-            smilingProbability = faces[0].smilingProbability;
-            faceRect = faces[0].boundingBox;
-            numberOfFaces = faces.length;
-
-            if (_mounted) update();
+          if (result != null && _mounted) {
+            resultText = result.text;
+            update();
           }
         }
       });
