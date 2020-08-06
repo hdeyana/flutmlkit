@@ -70,7 +70,13 @@ class TextRecognizerController extends BaseController {
 
           _isDetecting = true;
 
-          final image = FirebaseVisionImage.fromBytes(_concatenatePlanes(data.planes), _buildMetaData(data));
+          final FirebaseVisionImageMetadata metadata = FirebaseVisionImageMetadata(
+              rawFormat: data.format.raw,
+              size: Size(data.width.toDouble(), data.height.toDouble()),
+              planeData: data.planes.map((currentPlane) => FirebaseVisionImagePlaneMetadata(bytesPerRow: currentPlane.bytesPerRow, height: currentPlane.height, width: currentPlane.width)).toList(),
+              rotation: ImageRotation.rotation90);
+
+          final image = FirebaseVisionImage.fromBytes(data.planes[0].bytes, metadata);
           final VisionText result = await textRecognizer.processImage(image);
           _isDetecting = false;
           if (result != null && _mounted) {
